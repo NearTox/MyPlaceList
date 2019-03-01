@@ -26,7 +26,9 @@ data class Geometry(
 data class Location(
   val lat: Double,
   val lng: Double
-)
+) {
+  fun get(): String = "$lat,$lng"
+}
 
 data class Viewport(
   val northeast: Northeast,

@@ -2,9 +2,14 @@ package com.neartox.myplacelist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.widget.ShareActionProvider
+import androidx.lifecycle.Observer
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.neartox.myplacelist.data.Maps
+import com.neartox.myplacelist.sevices.AppDatabase
 import kotlinx.android.synthetic.main.activity_item_detail.*
 
 /**
@@ -14,17 +19,32 @@ import kotlinx.android.synthetic.main.activity_item_detail.*
  * in a [ItemListActivity].
  */
 class ItemDetailActivity : AppCompatActivity() {
+  private var item: Maps? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_item_detail)
     setSupportActionBar(toolbar)
 
-    fab.setOnClickListener { view ->
-      Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-        .setAction("Action", null).show()
+    val itemId = intent?.getStringExtra(ItemDetailFragment.ARG_ITEM_ID) ?: ""
+    if (itemId != "") {
+      AppDatabase.getInstance(this).mapsDao().getMap(itemId).observe(this, Observer {
+        item = it
+      })
     }
-
+    findViewById<FloatingActionButton>(R.id.fab_share).setOnClickListener {
+      item?.run {
+        // TODO use string assets
+        val myShareIntent = Intent(Intent.ACTION_SEND)
+        myShareIntent.type = "text/plain"
+        myShareIntent.putExtra(Intent.EXTRA_SUBJECT, "Compartir Ubicación")
+        myShareIntent.putExtra(
+          Intent.EXTRA_TEXT,
+          "https://www.google.com/maps/search/?api=1&query=${geometry.location.get()}&query_place_id=$place_id"
+        )
+        startActivity(Intent.createChooser(myShareIntent, "Compartir Ubicación"))
+      }
+    }
     // Show the Up button in the action bar.
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -69,4 +89,5 @@ class ItemDetailActivity : AppCompatActivity() {
       }
       else -> super.onOptionsItemSelected(item)
     }
+
 }

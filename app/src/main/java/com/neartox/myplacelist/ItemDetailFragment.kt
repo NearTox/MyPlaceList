@@ -1,5 +1,6 @@
 package com.neartox.myplacelist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +13,13 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.neartox.myplacelist.data.Maps
 import com.neartox.myplacelist.sevices.AppDatabase
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
+
 
 /**
  * A fragment representing a single Item detail screen.
@@ -64,7 +67,6 @@ class ItemDetailFragment : Fragment(), OnMapReadyCallback {
     savedInstanceState: Bundle?
   ): View? {
     val rootView = inflater.inflate(R.layout.item_detail, container, false)
-
 
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     val mapView: MapView = rootView.id_item_map
